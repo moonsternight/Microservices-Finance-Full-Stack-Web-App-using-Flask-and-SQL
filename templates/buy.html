@@ -1,0 +1,63 @@
+{% extends "layout.html" %} {% block title %} Buy {% endblock %} {% block main
+%}
+<div class="container">
+  <div class="row">
+    <div class="col-md-6 text-md-left mt-5">
+      <h1>Buy</h1>
+      <form id="buyForm" class="mt-5">
+        <div class="form-group">
+          <input
+            autocomplete="off"
+            class="form-control"
+            id="symbol"
+            placeholder="Stock Symbol"
+            type="text"
+          />
+        </div>
+        <div class="form-group">
+          <input
+            autocomplete="off"
+            class="form-control"
+            id="shares"
+            placeholder="Shares"
+            type="number"
+            min="1"
+          />
+        </div>
+        <button class="btn btn-outline-success mt-2" type="submit">Buy</button>
+      </form>
+    </div>
+    <div class="col-md-6">
+      <img src="../static/images/animated-wallet.svg" />
+    </div>
+  </div>
+</div>
+
+<script>
+  document
+    .getElementById("buyForm")
+    .addEventListener("submit", function (event) {
+      event.preventDefault();
+
+      let symbol = document.getElementById("symbol").value;
+      let shares = document.getElementById("shares").value;
+
+      fetch("/buy", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          user_id: 1, // HARUSNYA DIAMBIL DARI SESI LOGIN USER
+          symbol: symbol,
+          shares: parseInt(shares),
+          price: 100.0, // HARUSNYA MENGAMBIL HARGA SAHAM DARI API
+        }),
+      })
+        .then((response) => response.json())
+        .then((data) => alert("Success: " + data.message))
+        .catch((error) => console.error("Error:", error));
+    });
+</script>
+
+{% endblock %}
